@@ -1,0 +1,30 @@
+package com.example.DATN2025.entity;
+
+import lombok.*;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "BillDetail")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class BillDetail implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productDetailId")
+    private ProductDetail productDetail;
+
+    private Double momentPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "billId")
+    private Bill bill;
+
+    private Integer returnQuantity;
+}

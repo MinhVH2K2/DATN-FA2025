@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/admin-layout.html}">
+
+<head>
+
+
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+
+    <!-- Bootstrap + Font Awesome -->
+    <link rel="stylesheet" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.min.css}">
+
+    <style>
+        /* ===== 🎨 Tùy chỉnh nhẹ để giao diện đẹp hơn ===== */
+        .filter-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-card label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .filter-card .form-select,
+        .filter-card .form-control {
+            border-radius: 6px;
+        }
+
+        .btn {
+            border-radius: 6px;
+        }
+
+        /* Bảng sản phẩm gọn gàng hơn */
+        table th {
+            white-space: nowrap;
+        }
+
+        table td {
+            vertical-align: middle;
+        }
+
+        /* Hiệu ứng hover trên hàng */
+        table tbody tr:hover {
+            background-color: #f2f7ff;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <h4 class="mb-4 fw-bold text-primary"><i class="fa fa-boxes"></i> Quản lý sản phẩm</h4>
+
+    <!-- ==========================
+         🧩 KHỐI BỘ LỌC SẢN PHẨM
+    =========================== -->
+    <div class="card mb-4 border-0 shadow-sm filter-card">
+        <div class="card-body">
+            <!-- Form lọc -->
+            <form th:action="@{/admin/product-all}" method="GET" class="row g-3 align-items-end">
+                <!-- Ô nhập mã sản phẩm -->
+                <div class="col-md-2">
+                    <label><i class="fa fa-barcode"></i> Mã SP</label>
+                    <input type="text" class="form-control form-control-sm"
+                           name="maSanPham" placeholder="Nhập mã..."
+                           th:value="${maSanPham}">
+                </div>
+
+                <!-- Ô nhập tên sản phẩm -->
+                <div class="col-md-2">
+                    <label><i class="fa fa-tag"></i> Tên SP</label>
+                    <input type="text" class="form-control form-control-sm"
+                           name="tenSanPham" placeholder="Nhập tên..."
+                           th:value="${tenSanPham}">
+                </div>
+
+                <!-- Chọn nhãn hàng -->
+                <div class="col-md-2">
+                    <label><i class="fa fa-industry"></i> Nhãn hàng</label>
+                    <select class="form-select form-select-sm" name="nhanHang" th:value="${nhanHang}">
+                        <option th:value="null">Tất cả</option>
+                        <option th:each="brand: ${listBrand}"
+                                th:value="${brand.id}"
+                                th:text="${brand.name}"
+                                th:selected="${brand.id == nhanHang}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Chọn chất liệu -->
+                <div class="col-md-2">
+                    <label><i class="fa fa-cube"></i> Chất liệu</label>
+                    <select class="form-select form-select-sm" name="chatLieu" th:value="${chatLieu}">
+                        <option th:value="null">Tất cả</option>
+                        <option th:each="material: ${listMaterial}"
+                                th:value="${material.id}"
+                                th:text="${material.name}"
+                                th:selected="${material.id == chatLieu}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Chọn thể loại -->
+                <div class="col-md-2">
+                    <label><i class="fa fa-list"></i> Thể loại</label>
+                    <select class="form-select form-select-sm" name="theLoai" th:value="${theLoai}">
+                        <option th:value="null">Tất cả</option>
+                        <option th:each="category: ${listCategory}"
+                                th:value="${category.id}"
+                                th:text="${category.name}"
+                                th:selected="${category.id == theLoai}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Chọn trạng thái -->
+                <div class="col-md-2">
+                    <label><i class="fa fa-toggle-on"></i> Trạng thái</label>
+                    <select class="form-select form-select-sm" name="trangThai" th:value="${trangThai}">
+                        <option th:value="null">Tất cả</option>
+                        <option value="1" th:selected="${trangThai == 1}">Còn bán</option>
+                        <option value="2" th:selected="${trangThai == 2}">Ngừng bán</option>
+                    </select>
+                </div>
+
+                <!-- Nút thao tác -->
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm me-2">
+                        <i class="fa fa-search"></i> Tìm kiếm
+                    </button>
+                    <a th:href="@{/admin/product-all}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fa fa-sync-alt"></i> Làm mới
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==========================
+         📦 DANH SÁCH SẢN PHẨM
+    =========================== -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-semibold text-dark">Danh sách sản phẩm</h5>
+        <a href="/admin/product-create" class="btn btn-success btn-sm shadow-sm">
+            <i class="fa fa-plus-square"></i> Thêm sản phẩm
+        </a>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle">
+            <thead class="table-primary">
+            <tr>
+                <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
+                <th>Nhãn hàng</th>
+                <th>Chất liệu</th>
+                <th>Thể loại</th>
+<!--                <th>Trạng thái</th>-->
+                <th class="text-center">Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Lặp qua danh sách sản phẩm -->
+            <tr th:each="item : ${items}">
+                <td>
+                    <a th:href="@{'/admin/chi-tiet-san-pham/' + ${item.maSanPham}}"
+                       class="text-decoration-none fw-bold text-primary"
+                       th:text="${item.maSanPham}"></a>
+                </td>
+                <td th:text="${item.tenSanPham}"></td>
+                <td th:text="${item.nhanHang}"></td>
+                <td th:text="${item.chatLieu}"></td>
+                <td th:text="${item.theLoai}"></td>
+<!--                <td>-->
+<!--                    <span th:switch="${item.trangThai}">-->
+<!--                        <span th:case="1" class="badge bg-success">Còn bán</span>-->
+<!--                        <span th:case="2" class="badge bg-secondary">Ngừng bán</span>-->
+<!--                        <span th:case="0" class="badge bg-warning text-dark">Đang khởi tạo</span>-->
+<!--                    </span>-->
+<!--                </td>-->
+
+
+                <!--                Xóa sản phẩm-->
+                <td class="text-center">
+                    <a th:href="@{'/admin/product-edit/' + ${item.maSanPham}}"
+                       class="btn btn-outline-primary btn-sm me-1">
+                        <i class="fa fa-edit"></i> Sửa
+                    </a>
+<!--                    <button type="button"-->
+<!--                            class="btn btn-outline-danger btn-sm btn-delete"-->
+<!--                            th:data-id="${item.idSanPham}">-->
+<!--                        <i class="fa fa-trash"></i>-->
+<!--                    </button>-->
+<!--                    <span th:switch="${item.trangThai}">-->
+        <!-- Nếu đang bán (1) -->
+<!--        <button th:case="1"-->
+<!--                type="button"-->
+<!--                class="btn btn-outline-warning btn-sm btn-toggle-status"-->
+<!--                th:data-id="${item.idSanPham}"-->
+<!--                th:data-status="1">-->
+<!--            <i class="fa fa-pause-circle"></i> Ngừng bán-->
+<!--        </button>-->
+
+<!--                        &lt;!&ndash; Nếu ngừng bán (2) &ndash;&gt;-->
+<!--        <button th:case="2"-->
+<!--                type="button"-->
+<!--                class="btn btn-outline-success btn-sm btn-toggle-status"-->
+<!--                th:data-id="${item.idSanPham}"-->
+<!--                th:data-status="2">-->
+<!--            <i class="fa fa-play-circle"></i> Bán lại-->
+<!--        </button>-->
+<!--    </span>-->
+                </td>
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ==========================
+         📄 PHÂN TRANG
+    =========================== -->
+    <div class="d-flex justify-content-end mt-3">
+        <ul class="pagination pagination-sm">
+            <li th:classappend="${!items.hasPrevious()} ? 'disabled'" class="page-item">
+                <a th:href="@{/admin/product-all(page=0)}" class="page-link"><i
+                        class="fas fa-angle-double-left"></i></a>
+            </li>
+            <li th:classappend="${!items.hasPrevious()} ? 'disabled'" class="page-item">
+                <a th:href="@{/admin/product-all(page=${items.number - 1})}" class="page-link"><i
+                        class="fas fa-angle-left"></i></a>
+            </li>
+            <li th:classappend="${!items.hasNext()} ? 'disabled'" class="page-item">
+                <a th:href="@{/admin/product-all(page=${items.number + 1})}" class="page-link"><i
+                        class="fas fa-angle-right"></i></a>
+            </li>
+            <li th:classappend="${!items.hasNext()} ? 'disabled'" class="page-item">
+                <a th:href="@{/admin/product-all(page=${items.totalPages - 1})}" class="page-link"><i
+                        class="fas fa-angle-double-right"></i></a>
+            </li>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:inline="javascript">
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.dataset.id; // Lấy ID sản phẩm
+
+                Swal.fire({
+                    title: 'Bạn có chắc chắn?',
+                    text: "Sản phẩm sẽ bị xóa !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33', // Màu đỏ cho nút xác nhận
+                    cancelButtonColor: '#6c757d', // Màu xám cho nút hủy
+                    confirmButtonText: 'Có, xóa ngay!',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Chuyển hướng tới URL xóa sản phẩm (dùng GET theo Controller của bạn)
+                        window.location.href = '/admin/product-delete/' + id;
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
