@@ -50,4 +50,5 @@ public class BillSpecification implements Specification<Bill> {
         predicates.add(criteriaBuilder.between(root.get("createDate"), sevenDaysAgoStartOfDay, nowEndOfDay));
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
+    //
 }
