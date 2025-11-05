@@ -45,4 +45,5 @@ public class BillReturnSpecification implements Specification<BillReturn> {
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
+    //
 }

@@ -20,7 +20,7 @@ public class ProductSpecification implements Specification<Product> {
     public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
         if (searchProductDto.getMinPrice() != null) {
-              // Tạo một subquery để lấy giá của ProductDetail đầu tiên
+// Tạo một subquery để lấy giá của ProductDetail đầu tiên
             Subquery<Double> subquery = query.subquery(Double.class);
             Root<Product> productRoot = subquery.from(Product.class);
             Join<Product, ProductDetail> productDetailJoin = productRoot.join("productDetails");

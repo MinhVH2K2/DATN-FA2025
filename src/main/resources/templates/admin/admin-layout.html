@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
->
-<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:replace="fragments-admin::page_head('Admin page')">
-    <script>
-
-    </script>
 </head>
 <style>
     .user-menu {
@@ -19,6 +15,22 @@
     .nav-link:hover {
         background-color: #cccccc;
     }
+
+    /* === BỔ SUNG CSS CHO SIDEBAR DROPDOWN === */
+    /* Mặc định ẩn menu con (để JS điều khiển) */
+    .menu-item-has-children .sub-menu {
+        display: none;
+    }
+
+    /* Tùy chọn: Đổi màu nền cho mục cha khi đang mở */
+    .menu-item-has-children.open > a {
+        background-color: #3b3f46;
+    }
+
+    /* Thụt lề cho menu con */
+    .menu-item-has-children ul.sub-menu {
+        padding-left: 15px;
+    }
 </style>
 <body>
 
@@ -30,8 +42,8 @@
                     aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand text-white" style="background-color: #272c33" href=".."><img th:src="@{/admin/images/color-1.png}" alt="Logo"></a>
-            <a class="navbar-brand hidden" href=".."><img th:src="@{/admin/images/logo-2.png}" alt="Logo"></a>
+            <a class="navbar-brand text-white" style="background-color: #272c33" href="./"><img th:src="@{/admin/images/color-1.png}" alt="Logo"></a>
+            <a class="navbar-brand hidden" href="./"><img th:src="@{/admin/images/logo-2.png}" alt="Logo"></a>
         </div>
 
         <div id="main-menu" class="main-menu collapse navbar-collapse">
@@ -42,10 +54,10 @@
                 <li class="active">
                     <a th:href="@{/admin/pos}"> <i class="menu-icon fa fa-shopping-bag"></i>Bán hàng tại quầy </a>
                 </li>
-                <h3 class="menu-title">QUẢN LÝ</h3><!-- /.menu-title -->
-                <li class="menu-item-has-children dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Quản lý sản phẩm</a>
+                <h3 class="menu-title">QUẢN LÝ</h3>
+
+                <li class="menu-item-has-children">
+                    <a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-laptop"></i>Quản lý sản phẩm</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fas fa-tshirt"></i><a th:href="@{/admin/product-all}">Sản phẩm</a></li>
                         <li><i class="fas fa-palette"></i><a th:href="@{/admin/color-list}">Màu sắc</a></li>
@@ -55,54 +67,48 @@
                         <li><i class="far fa-copyright"></i><a th:href="@{/admin/brand-all}">Nhãn hàng</a></li>
                     </ul>
                 </li>
-                <li class="menu-item-has-children dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Quản lý hóa đơn</a>
+
+                <li class="menu-item-has-children">
+                    <a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-table"></i>Quản lý hóa đơn</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fas fa-file-invoice"></i><a th:href="@{/admin/bill-list}">Hóa đơn</a></li>
-                        <li ><i class="fas fa-exchange-alt"></i><a th:href="@{/admin-only/bill-return}">Đổi trả</a></li>
-
+                        <li sec:authorize="hasRole('ADMIN')"><i class="fas fa-exchange-alt"></i><a th:href="@{/admin-only/bill-return}">Đổi trả</a></li>
                     </ul>
                 </li>
-                <li class="menu-item-has-children dropdown" >
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"> <i class="menu-icon fa fa-american-sign-language-interpreting"></i>Công cụ khuyến mãi</a>
+
+                <li class="menu-item-has-children" sec:authorize="hasRole('ADMIN')">
+                    <a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-american-sign-language-interpreting"></i>Công cụ khuyến mãi</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-hand-peace-o"></i><a th:href="@{/admin-only/discount-code}">Mã giảm giá</a></li>
                         <li><i class="fas fa-tag"></i><a th:href="@{/admin-only/product-discount}">Giảm giá sản phẩm</a></li>
                     </ul>
                 </li>
 
-                <li class="menu-item-has-children dropdown" >
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"> <i class="menu-icon fas fa-shopping-basket"></i>Giao dịch</a>
+                <li class="menu-item-has-children" sec:authorize="hasRole('ADMIN')">
+                    <a href="#" class="dropdown-toggle"> <i class="menu-icon fas fa-shopping-basket"></i>Giao dịch</a>
                     <ul class="sub-menu children dropdown-menu">
-<!--                        <li><i class="fas fa-cash-register"></i><a th:href="@{/admin/transaction}">Theo dõi thanh toán online</a></li>-->
                         <li><i class="fas fa-undo"></i><a th:href="@{/admin-only/need-refund-mng}">Đơn hoàn tiền</a></li>
                     </ul>
                 </li>
 
-                <li class="menu-item-has-children dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"> <i class="menu-icon fas fa-project-diagram"></i>Thống kê</a>
+                <li class="menu-item-has-children">
+                    <a href="#" class="dropdown-toggle"> <i class="menu-icon fas fa-project-diagram"></i>Thống kê</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fas fa-chart-line"></i><a th:href="@{/admin/thong-ke-doanh-thu}">Doanh Thu</a></li>
                         <li><i class="fas fa-chart-pie"></i><a th:href="@{/admin/thong-ke-san-pham}">Sản phẩm</a></li>
                     </ul>
                 </li>
 
-                <li class="menu-item-has-children dropdown" >
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"> <i class="menu-icon fas fa-user"></i>Quản lý tài khoản</a>
+                <li class="menu-item-has-children" sec:authorize="hasRole('ADMIN')">
+                    <a href="#" class="dropdown-toggle"> <i class="menu-icon fas fa-user"></i>Quản lý tài khoản</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fas fa-chart-line"></i><a th:href="@{/admin-only/account-management}">Tài khoản</a></li>
                     </ul>
                 </li>
 
-                <h3 class="menu-title">Công cụ khác</h3><!-- /.menu-title -->
-                <li class="menu-item-has-children dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"> <i class="menu-icon fa fa-glass"></i>Khác</a>
+                <h3 class="menu-title">Công cụ khác</h3>
+                <li class="menu-item-has-children">
+                    <a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-glass"></i>Khác</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="menu-icon fa fa-sign-in"></i><a th:href="@{/user_logout}">Đăng xuất</a></li>
                         <li><i class="menu-icon fa fa-paper-plane"></i><a th:href="@{/profile}">Cập nhật thông tin</a>
@@ -110,12 +116,11 @@
                     </ul>
                 </li>
             </ul>
-        </div><!-- /.navbar-collapse -->
+        </div>
     </nav>
-</aside><!-- /#left-panel -->
+</aside>
 
 <div id="right-panel" class="right-panel">
-    <!-- Header-->
     <header id="header" class="header">
         <div class="col-sm-7">
             <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
@@ -131,56 +136,67 @@
                 </a>
 
                 <div class="user-menu">
-                    <a class="nav-link" th:href="@{/static}"><i class="fa fa-user"></i> Trang khách</a>
-
+                    <a class="nav-link" th:href="@{/}"><i class="fa fa-user"></i> Trang khách</a>
                     <a class="nav-link" th:href="@{/user_logout}"><i class="fa fa-power-off"></i> Đăng xuất</a>
                 </div>
             </div>
         </div>
     </header>
 
-<!--    <div class="breadcrumbs">-->
-<!--        <div class="col-sm-4">-->
-<!--            <div class="page-header float-left">-->
-<!--                <div class="page-title">-->
-<!--                    <h1>ADMIN</h1>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-8">-->
-<!--            <div class="page-header float-right">-->
-<!--                <div class="page-title">-->
-<!--                    <ol class="breadcrumb text-right">-->
-<!--                        <li class="active">Dashboard</li>-->
-<!--                    </ol>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
     <div class="content p-4">
-<!--        <th:insert data-th-insert="~{${layoutAdmin}}"></th:insert>-->
-<!--        <div th:replace="Color :: content">-->
-
-<!--        </div>-->
         <div layout:fragment="content">
-
         </div>
     </div>
 </div>
 
 <th:block th:replace="fragments-admin::script">
-
 </th:block>
 
 <script>
-    $('.user-avatar').on('click', function () {
-        if($('.user-menu').hasClass('active')) {
-            $('.user-menu').removeClass('active')
+    // Xử lý menu người dùng (Header)
+    $('.user-avatar').on('click', function (e) {
+        e.stopPropagation();
+        $('.user-menu').toggleClass('active');
+    });
+
+    // Đóng menu người dùng khi click ra ngoài
+    $(document).on('click', function() {
+        if ($('.user-menu').hasClass('active')) {
+            $('.user-menu').removeClass('active');
         }
-        else {
-            $('.user-menu').addClass('active')
+    });
+
+    // === SCRIPT KHẮC PHỤC LỖI DROPDOWN MENU SIDEBAR (Giữ hiển thị) ===
+    $('.menu-item-has-children > a').on('click', function (e) {
+        e.preventDefault();
+
+        var $parentLi = $(this).parent();
+
+        // Kiểm tra xem menu đang mở hay đóng
+        var isOpen = $parentLi.hasClass('open');
+
+        // 1. Đóng TẤT CẢ các menu đang mở khác trước
+        // Đảm bảo chỉ một menu cha được mở tại một thời điểm
+        $('.menu-item-has-children.open').not($parentLi).each(function() {
+            $(this).removeClass('open');
+            $(this).find('ul.sub-menu').slideUp(300);
+        });
+
+        // 2. Bật/Tắt (Toggle) menu hiện tại
+        if (!isOpen) {
+            // Nếu menu đang đóng, thì mở ra
+            $parentLi.addClass('open');
+            $parentLi.find('ul.sub-menu').slideDown(300);
+        } else {
+            // Nếu menu đang mở, thì đóng lại (khi click lần 2)
+            $parentLi.removeClass('open');
+            $parentLi.find('ul.sub-menu').slideUp(300);
         }
-    })
+    });
+    // ===================================================
+
 </script>
+
+
 </body>
 </html>

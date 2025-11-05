@@ -50,4 +50,5 @@ public class BillSpecification2 implements Specification<Bill> {
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
+    //
 }
