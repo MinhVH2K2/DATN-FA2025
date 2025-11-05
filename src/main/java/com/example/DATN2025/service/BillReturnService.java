@@ -20,4 +20,5 @@ public interface BillReturnService {
     String generateHtmlContent(Long billReturnId);
 
     BillReturnDto updateStatus(Long id, int returnStatus);
+    //
 }
