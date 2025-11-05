@@ -27,5 +27,5 @@ public class BuyAtTheCounterController {
         model.addAttribute("products", productPage);
         return "admin/BuyAtTheCounter";
     }
-
+//
 }
