@@ -7,6 +7,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Data
+@ToString
 public class BillDto {
     private Long id;
     private String code;
