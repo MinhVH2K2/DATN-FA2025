@@ -33,6 +33,8 @@ public class Product implements Serializable {
 
     @Column(nullable = false)
     private boolean deleteFlag;
+//@Column(nullable = false, columnDefinition = "bit default 0")
+//private boolean deleteFlag = false;
 
     @Column(nullable = false)
     private double price;
