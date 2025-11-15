@@ -8,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.1.1/flowbite.min.css" rel="stylesheet"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css" integrity="sha512-K1k7jSn9RDKEcn/ugqVVvWYu0bcS3q1w6m/5pQSnrj0bCfIqF6Wk49lkmckSb4wglvTP9V17LtS0q0XxYccXbg==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.4/jquery.simplePagination.min.js" integrity="sha512-J4OD+6Nca5l8HwpKlxiZZ5iF79e9sgRGSf0GxLsL1W55HHdg48AEiKCXqvQCNtA1NOMOVrw15DXnVuPpBm2mPg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -75,44 +76,61 @@
 
   <div class="px-4 py-4">
     <div class="main-section pt-8">
-      <h5 class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">Tạo giảm
-        giá</h5>
-      <nav class="flex" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-          <li class="inline-flex items-center">
-            <a th:href="@{/admin}"
-               class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-              <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                   fill="currentColor" viewBox="0 0 20 20">
-                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-              </svg>
-              Home
-            </a>
-          </li>
-          <li>
-            <div class="flex items-center">
-              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                   xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                      stroke-width="2" d="m1 9 4-4-4-4"/>
-              </svg>
-              <a th:href="@{/admin-only/product-discount}"
-                 class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Giảm
-                giá sản phẩm</a>
-            </div>
-          </li>
-          <li aria-current="page">
-            <div class="flex items-center">
-              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                   xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                      stroke-width="2" d="m1 9 4-4-4-4"/>
-              </svg>
-              <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Tạo giảm giá</span>
-            </div>
-          </li>
-        </ol>
-      </nav>
+      <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+          <h1 class="text-3xl font-extrabold text-black font-inter mb-2 md:mb-0">Tạo Giảm Giá</h1>
+          <nav class="text-sm text-gray-500" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-2">
+              <li>
+                <a th:href="@{/admin}" class="hover:text-blue-600">Home</a>
+              </li>
+              <li>/</li>
+              <li>
+                <a th:href="@{/admin-only/product-discount}" class="hover:text-blue-600">Giảm giá sản phẩm</a>
+              </li>
+              <li>/</li>
+              <li class="text-gray-400">Tạo giảm giá</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+
+      <!--      <nav class="flex" aria-label="Breadcrumb">-->
+      <!--        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">-->
+      <!--          <li class="inline-flex items-center">-->
+      <!--            <a th:href="@{/admin}"-->
+      <!--               class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">-->
+      <!--              <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"-->
+      <!--                   fill="currentColor" viewBox="0 0 20 20">-->
+      <!--                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>-->
+      <!--              </svg>-->
+      <!--              Home-->
+      <!--            </a>-->
+      <!--          </li>-->
+      <!--          <li>-->
+      <!--            <div class="flex items-center">-->
+      <!--              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"-->
+      <!--                   xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">-->
+      <!--                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"-->
+      <!--                      stroke-width="2" d="m1 9 4-4-4-4"/>-->
+      <!--              </svg>-->
+      <!--              <a th:href="@{/admin-only/product-discount}"-->
+      <!--                 class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Giảm-->
+      <!--                giá sản phẩm</a>-->
+      <!--            </div>-->
+      <!--          </li>-->
+      <!--          <li aria-current="page">-->
+      <!--            <div class="flex items-center">-->
+      <!--              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"-->
+      <!--                   xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">-->
+      <!--                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"-->
+      <!--                      stroke-width="2" d="m1 9 4-4-4-4"/>-->
+      <!--              </svg>-->
+      <!--              <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-black-400">Tạo giảm giá</span>-->
+      <!--            </div>-->
+      <!--          </li>-->
+      <!--        </ol>-->
+      <!--      </nav>-->
 
       <div class="main-area bg-white py-2 px-2 mt-4 h-screen">
 
@@ -144,7 +162,6 @@
                           class="category-item inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                           th:text="${category.name}"></button>
                 </li>
-
               </ul>
             </div>
             <div class="relative w-full">
@@ -161,6 +178,9 @@
             </div>
           </div>
         </form>
+
+
+
 
         <div class="grid grid-cols-3 gap-2 mt-6">
           <div id="all-product" class="border border-gray-200">
@@ -294,6 +314,22 @@
       }
     })
 
+    const categoryButtons = document.querySelectorAll('#dropdown .category-item');
+    const searchDropdown = document.getElementById('search-dropdown');
+
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Nếu button là "Tất cả các loại", gán input rỗng
+        if (button.textContent.trim() === "Tất cả các loại") {
+          searchDropdown.value = "";
+        } else {
+          searchDropdown.value = button.textContent.trim();
+        }
+
+        // Ẩn dropdown nếu muốn
+        document.getElementById('dropdown').classList.add('hidden');
+      });
+    });
 
     $(".category-item").on('click', function () {
       let categoryId = $(this).attr('data-category-id')
@@ -310,12 +346,9 @@
         e.preventDefault();
       }
     }
-
     function removeAnyNonDigit(value) {
       return value.replace(/\D/g, '');
     }
-
-
     $.ajax({
       method: 'GET',
       type: 'json',
