@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/admin-layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê Sản phẩm</title>
+</head>
+<body>
+<div class="main-wrapper" layout:fragment="content">
+    <div id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+    <h2 class="mb-4 text-primary">📈 Thống kê Sản phẩm</h2>
+
+    <div class="card shadow-sm mb-5">
+        <div class="card-header py-3">
+            <h5 class="m-0 font-weight-bold text-primary">Lọc theo Khoảng thời gian</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-wrap align-items-end mb-4">
+                <div class="form-group mr-3 by-date">
+                    <label class="form-label">Ngày bắt đầu</label>
+                    <input type="date" id="dateStart" class="form-control" >
+                </div>
+
+                <div class="form-group mr-3 by-date">
+                    <label class="form-label">Ngày kết thúc</label>
+                    <input type="date" id="dateEnd" class="form-control">
+                </div>
+
+                <div class="form-group mr-3 by-month" style="display: none;">
+                    <label class="form-label">Tháng bắt đầu</label>
+                    <input type="month" id="monthStart" class="form-control" >
+                </div>
+
+                <div class="form-group mr-3 by-month" style="display: none;">
+                    <label class="form-label">Tháng kết thúc</label>
+                    <input type="month" id="monthEnd" class="form-control">
+                </div>
+
+                <div class="form-group mr-3">
+                    <button id="apply-statistic" class="btn btn-primary">Áp dụng</button>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" id="export" class="btn btn-outline-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="4"><path stroke-linejoin="round" d="M8 15V6a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v36a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-9"/><path d="M31 15h3m-6 8h6m-6 8h6"/><path stroke-linejoin="round" d="M4 15h18v18H4zm6 6l6 6m0-6l-6 6"/></g></svg>
+                        Export Excel
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-4 table-responsive">
+                <table class="table table-hover" id="product-table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Mã sản phẩm</th>
+                        <th scope="col">Tên sản phẩm</th>
+                        <th scope="col">Nhãn hiệu</th>
+                        <th scope="col">Loại</th>
+                        <th scope="col">Số lượng bán</th>
+                        <th scope="col">Số lượng đổi trả</th>
+                        <th scope="col">Doanh thu</th>
+                    </tr>
+                    </thead>
+                    <tbody id="product-list">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="m-0 font-weight-bold text-primary">🏅 Danh sách Sản phẩm Bán chạy nhất</h5>
+                    <select class="form-select form-control-sm" style="width: 200px" id="best-seller-time-select">
+                        <option value="">Tất cả thời gian</option>
+                        <option value="7">7 ngày trước</option>
+                        <option value="15">15 ngày trước</option>
+                        <option value="30">1 tháng trước</option>
+                    </select>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-striped mt-0">
+                        <thead>
+                        <tr>
+                            <th scope="col">Sản phẩm</th>
+                            <th scope="col">Ảnh</th>
+                            <th scope="col">Số lượng bán</th>
+                            <th scope="col">Doanh thu</th>
+                        </tr>
+                        </thead>
+                        <tbody id="best-seller-list">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-primary">Biểu đồ Doanh thu (Top 5)</h5>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <canvas id="donut-best-seller"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/shim.min.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Get the current date
+        var currentDate = new Date();
+
+        // Lấy ngày đầu tháng
+        var firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+        // Set giá trị của input "dateStart" là ngày đầu tháng
+        var dateStartInput = document.getElementById("dateStart");
+        dateStartInput.value = formatDate(firstDayOfMonth);
+
+        // Lấy ngày cuối cùng của tháng tiếp theo và trừ đi 1 ngày để lấy ngày cuối tháng hiện tại
+        var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        // Set giá trị của input "dateEnd" là ngày cuối tháng
+        var dateEndInput = document.getElementById("dateEnd");
+        dateEndInput.value = formatDate(lastDayOfMonth);
+
+        // Set the "monthStart" input value to the current month
+        var monthStartInput = document.getElementById("monthStart");
+        monthStartInput.value = formatMonth(currentDate, 'month');
+
+        // Calculate the date with the current month plus 12
+        var monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 12);
+
+        // Set the "monthEnd" input value to the date with the current month plus 12
+        var monthEndInput = document.getElementById("monthEnd");
+        monthEndInput.value = formatMonth(monthEnd, 'month');
+
+        // Function to format the date as "YYYY-MM"
+        function formatMonth(date, format) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            if (format === 'month') {
+                return year + '-' + month;
+            } else {
+                var day = String(date.getDate()).padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            }
+        }
+
+        // Function to format the date as "YYYY-MM-DD"
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+    </script>
+    <script>
+        $('.by-date').show()
+        $('.by-month').hide()
+        initProduct();
+
+        function initProduct() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: `/api/get-statistic-product-time?fromDate=${$('#dateStart').val()}&toDate=${$('#dateEnd').val()}`,
+                success: function (data) {
+                    loadHtmlProduct(data)
+                }
+            })
+        }
+        var table = new DataTable('#product-table', {
+            order: [],
+            info: false,
+            lengthMenu: [
+                [5, 10, 15, 20],
+                [5, 10, 15, 20],
+            ],
+            language: {
+                search: "Tìm kiếm:",
+                "lengthMenu": "Hiển thị _MENU_ bản ghi 1 trang",
+                "zeroRecords": "Không tìm thấy bản ghi nào",
+                "paginate": {
+                    "first":      "<<",
+                    "last":       ">>",
+                    "next":       ">",
+                    "previous":   "<"
+                },
+            }
+        });
+        async function loadHtmlProduct(productList) {
+            var html = ''
+            table.destroy()
+            await productList.forEach(product => {
+                var price = formatNumber(product.revenue)
+                html += `<tr scope="row">
+                        <td>
+                            <a class="text-primary" href="/admin/chi-tiet-san-pham/${product.code}">${product.code}</a>
+                        </td>
+                        <td>
+                            <a class="text-primary" href="/admin/chi-tiet-san-pham/${product.code}">${product.name}</a>
+                        </td>
+                        <td>${product.brand}</td>
+                        <td>${product.category}</td>
+                        <td>${product.totalQuantity}</td>
+                        <td>${product.totalQuantityReturn}</td>
+                        <td>${price}</td>
+                    </tr>`
+            })
+
+            await $('#product-list').html(html);
+            table = new DataTable('#product-table', {
+                order: [],
+                info: false,
+                lengthMenu: [
+                    [5, 10, 15, 20],
+                    [5, 10, 15, 20],
+                ],
+                language: {
+                    search: "Tìm kiếm:",
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi 1 trang",
+                    "zeroRecords": "Không tìm thấy bản ghi nào",
+                    "paginate": {
+                        "first":      "<<",
+                        "last":       ">>",
+                        "next":       ">",
+                        "previous":   "<"
+                    },
+                }
+            });
+
+        }
+
+        // Validate
+        $('#apply-statistic').on('click', async function () {
+
+            const startDate = $('#dateStart').val()
+            const toDate = $('#dateEnd').val()
+            if (!startDate) {
+                Toastify({
+                    text: "Vui lòng nhâp ngày bắt đầu",
+                    className: "error",
+                    style: {
+                        background: "red",
+                        color: "white"
+                    }
+                }).showToast();
+                return
+            }
+
+            if (toDate == "") {
+                Toastify({
+                    text: "Vui lòng nhâp ngày kết thúc",
+                    className: "error",
+                    style: {
+                        background: "red",
+                        color: "white"
+                    }
+                }).showToast();
+                return;
+            }
+
+            if (startDate >= toDate) {
+                Toastify({
+                    text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc",
+                    className: "error",
+                    style: {
+                        background: "red",
+                        color: "white"
+                    }
+                }).showToast();
+                return;
+            }
+
+            $('#loading-overlay').show()
+            await $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: `/api/get-statistic-product-time?fromDate=${startDate}&toDate=${toDate}`,
+                success: function (data) {
+                    $('#loading-overlay').hide()
+                    loadHtmlProduct(data)
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Lỗi",
+                        text: "Có lỗi xảy ra",
+                        icon: "error"
+                    })
+                    $('#loading-overlay').hide();
+
+                }
+            })
+
+
+        })
+
+        // (Phần logic ẩn/hiện by-date, by-month đã bị loại bỏ như trong file gốc)
+        // $('#time-category').on('change', function () {
+        //     var value = $(this).val()
+        //
+        //     if(value == 1) {
+        //         $('.by-date').show()
+        //         $('.by-month').hide()
+        //     }
+        //
+        //     if(value == 2) {
+        //         $('.by-date').hide()
+        //         $('.by-month').show()
+        //     }
+        // })
+
+        callApiGetBestSellerAll()
+        function loadDonutCharBestSeller(labelList, dataList) {
+            let chartStatus = Chart.getChart("donut-best-seller"); // <canvas> id
+            if (chartStatus != undefined) {
+                chartStatus.destroy();
+            }
+            var chart = new Chart($('#donut-best-seller'), {
+                type: 'doughnut',
+                data: {
+                    labels: labelList,
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: dataList,
+                        // Bỏ qua màu nền để Chart.js tự chọn màu ngẫu nhiên
+                        hoverOffset: 4
+                    }]
+                },
+
+                options: {
+
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Biểu đồ doanh thu`
+                        },
+                        customCanvasBackgroundColor: {
+                            color: '#fff',
+                        }
+                    }
+                },
+
+                plugins: [plugin],
+            });
+        }
+
+        function callApiGetBestSellerAll() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '/api/get-bestseller-product-all',
+                success: function (data) {
+                    loadHtmlBestSeller(data)
+                    var lableList = []
+                    var dataList = []
+                    data.forEach(item => {
+                        lableList.push(item.name)
+                        dataList.push(item.revenue)
+                        loadDonutCharBestSeller(lableList, dataList)
+                    })
+                }
+            })
+        }
+
+        function loadHtmlBestSeller(data) {
+            var html = ''
+            data.forEach(product => {
+                var price = formatNumber(parseFloat(product.revenue))
+                html += `<tr scope="row">
+                        <td>
+                            <a class="text-primary" href="/admin/chi-tiet-san-pham/${product.code}">${product.name}</a>
+                        </td>
+                        <td><img src="/${product.imageUrl}" alt="" width="50" class="rounded"></td>
+                        <td>${product.totalQuantity}</td>
+                        <td>${price}</td>
+                    </tr>`
+            })
+
+            $('#best-seller-list').html(html)
+
+        }
+
+        $('#best-seller-time-select').on('change', function () {
+            var value = $(this).val()
+            var currentDate = new Date();
+            if(value == "") {
+                callApiGetBestSellerAll()
+            }
+            if(value == 7) {
+                var sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(currentDate.getDate() - 7);
+                callApiGetBestSellerInTime(formatToYYYYMMDD(sevenDaysAgo), formatToYYYYMMDD(new Date(currentDate.getDate() + 1)))
+            }
+
+            if(value == 15) {
+                var sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(currentDate.getDate() - 15);
+                callApiGetBestSellerInTime(formatToYYYYMMDD(sevenDaysAgo), formatToYYYYMMDD(new Date(currentDate.getDate() + 1)))
+            }
+
+            if(value == 30) {
+                var sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(currentDate.getDate() - 30);
+                callApiGetBestSellerInTime(formatToYYYYMMDD(sevenDaysAgo), formatToYYYYMMDD(new Date(currentDate.getDate() + 1)))
+            }
+        })
+
+        async function callApiGetBestSellerInTime(fromDate, toDate) {
+            await $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: `/api/get-bestseller-product-time?fromDate=${fromDate}&toDate=${toDate}`,
+                success: function (data) {
+                    loadHtmlBestSeller(data)
+                    var lableList = []
+                    var dataList = []
+                    data.forEach(item => {
+                        lableList.push(item.name)
+                        dataList.push(item.revenue)
+                        loadDonutCharBestSeller(lableList, dataList)
+                    })
+                }
+            })
+        }
+
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#fff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
+
+        function formatToYYYYMMDD(date) {
+            var yyyy = date.getFullYear().toString();
+            var mm = (date.getMonth() + 1).toString().padStart(2, '0');
+            var dd = date.getDate().toString().padStart(2, '0');
+            return yyyy + '-' + mm + '-' + dd;
+        }
+        function formatNumber(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function removeAnyNonDigit(value) {
+            return value.replace(/\D/g, '');
+        }
+
+        $('#export').on('click', exportToExcel)
+
+        async function exportToExcel() {
+            /* fetch JSON data and parse */
+            const url = `/api/get-statistic-product-time?fromDate=${$('#dateStart').val()}&toDate=${$('#dateEnd').val()}`;
+            const raw_data = await (await fetch(url)).json();
+
+            /* generate worksheet and workbook */
+            const worksheet = XLSX.utils.json_to_sheet(raw_data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "SanPham");
+
+            const heading =[
+                ["Mã sản phẩm", "Tên sản phẩm", "Nhãn hiệu", "Loại", "Số lượng bán", "Số lượng đổi trả", "Doanh thu"]
+            ]
+
+            /* fix headers */
+            XLSX.utils.sheet_add_aoa(worksheet,heading , {origin: "A1"});
+
+
+            /* create an XLSX file and try to save to Presidents.xlsx */
+            XLSX.writeFile(workbook, "thong-ke-san-pham.xlsx", {compression: true});
+        }
+    </script>
+</div>
+</body>
+</html>
