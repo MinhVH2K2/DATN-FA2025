@@ -146,16 +146,16 @@
                     <input type="date" class="form-control" id="endDate" name="endDate"
                            th:value="${#dates.format(dataSearch.endDate, 'yyyy-MM-dd')}">
                 </div>
-                <!-- Trạng thái -->
-                <div class="form-group col-md-2">
-                    <label for="status"><i class="fas fa-check-circle mr-1 text-muted"></i> Trạng thái</label>
-                    <select class="form-control" id="status" th:value="${dataSearch.status}">
-                        <option value="">-- Tất cả --</option>
-                        <option value="1" th:selected="${dataSearch.status == 1}">Đang hoạt động</option>
-                        <option value="0" th:selected="${dataSearch.status == 0}">Đã đóng</option>
-                    </select>
-                </div>
-                <!-- Số lượng còn -->
+<!--                 Trạng thái -->
+<!--                                <div class="form-group col-md-2">-->
+<!--                                    <label for="status"><i class="fas fa-check-circle mr-1 text-muted"></i> Trạng thái</label>-->
+<!--                                    <select class="form-control" id="status" th:value="${dataSearch.status}">-->
+<!--                                        <option value="">&#45;&#45; Tất cả &#45;&#45;</option>-->
+<!--                                        <option value="1" th:selected="${dataSearch.status == 1}">Đang hoạt động</option>-->
+<!--                                        <option value="0" th:selected="${dataSearch.status == 0}">Đã đóng</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                 Số lượng còn -->
                 <div class="form-group col-md-2">
                     <label for="maximumUsage"><i class="fas fa-sort-numeric-up-alt mr-1 text-muted"></i> Số lượng còn</label>
                     <input type="text" class="form-control" id="maximumUsage" name="maximumUsage" placeholder="VD: 1234"
@@ -198,7 +198,7 @@
                     <th scope="col" style="width: 10%">Kiểu</th>
                     <th scope="col" style="width: 15%">Giá trị giảm</th>
                     <th scope="col" style="width: 10%">Còn</th>
-                    <th scope="col" style="width: 10%">Trạng thái</th>
+<!--                    <th scope="col" style="width: 10%">Trạng thái</th>-->
                     <th style="width: 10%">Công cụ</th>
                 </tr>
                 </thead>
@@ -222,10 +222,10 @@
                     <td th:text="${discountCode.maximumUsage}"></td>
 
                     <!-- Trạng thái -->
-                    <td>
-                        <span th:if="${discountCode.status == 0}" class="badge badge-pill badge-danger">Đã đóng</span>
-                        <span th:if="${discountCode.status == 1}" class="badge badge-pill badge-success">Hoạt động</span>
-                    </td>
+<!--                    <td>-->
+<!--                        <span th:if="${discountCode.status == 0}" class="badge badge-pill badge-danger">Đã đóng</span>-->
+<!--                        <span th:if="${discountCode.status == 1}" class="badge badge-pill badge-success">Hoạt động</span>-->
+<!--                    </td>-->
 
                     <!-- Công cụ -->
                     <td class="action-icon-group">

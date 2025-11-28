@@ -59,7 +59,7 @@
             <div class="image-group d-flex">
                 <div class="selected-files d-flex" id="selected-images">
                     <div th:each="item : ${listImages}" class="selected-file me-2">
-                        <img class="exists-image" th:src="@{'/DATN2025/' + ${item.link}}" alt="Selected Image" width="100" height="120" th:data-image="${item.id}">
+                        <img class="exists-image" th:src="@{'/' + ${item.link}}" alt="Selected Image" width="100" height="120" th:data-image="${item.id}">
                         <div class="file-details">
 <span class="text-danger delete-img-btn">
                                                 <i class="fas fa-times-circle"></i>

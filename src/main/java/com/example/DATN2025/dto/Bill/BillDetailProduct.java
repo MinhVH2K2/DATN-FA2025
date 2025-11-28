@@ -6,7 +6,7 @@ public interface BillDetailProduct {
     Long getProductId();
 
     String getBillDetailId();
-
+    String getProductCode();
     String getImageUrl();
     String getTenSanPham();
 

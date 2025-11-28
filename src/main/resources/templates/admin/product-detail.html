@@ -155,7 +155,7 @@
                 </div>
                 <div class="image-list row no-gutters">
                     <div th:each="image: ${product.image}" class="col-md-2 image-container">
-                        <img th:src="@{'/DATN2025/'  + ${image.link}}" alt="" class="w-100">
+                        <img th:src="@{'/'  + ${image.link}}" alt="" class="w-100">
                     </div>
                 </div>
             </div>

@@ -17,6 +17,7 @@ import java.util.Date;
 @Table(name = "Account")
 public class Account implements Serializable {
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

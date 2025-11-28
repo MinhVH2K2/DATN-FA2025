@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     Product findByCode(String code);
-
+    Product findByName(String name);
     @Query("SELECT p FROM Product p WHERE p.name LIKE %:name%")
     Page<Product> getAllByName(String name, Pageable pageable);
 

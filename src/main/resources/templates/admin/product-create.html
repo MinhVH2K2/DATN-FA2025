@@ -203,7 +203,9 @@
                     <label for="name"><i class="fas fa-tag"></i>Tên sản phẩm<span class="red_require">*</span></label>
                     <input type="text" class="form-control" th:field="*{name}" id="name">
                     <span class="error"></span>
+                    <span class="error text-danger" th:if="${duplicatecode}" th:text="${duplicatecode}"></span>
                 </div>
+
             </div>
 
             <div class="form-row">

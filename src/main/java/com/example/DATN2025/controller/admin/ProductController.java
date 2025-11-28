@@ -125,6 +125,11 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("duplicateCode", "Mã sản phẩm đã tồn tại");
             return "redirect:/admin/product-create";
         }
+        if(productRepository.findByName(product.getName())!= null){
+           System.out.println(productRepository.findByName(product.getName()));
+            redirectAttributes.addFlashAttribute("duplicatecode"," Tên sản phẩm đã tồn tại");
+            return "redirect:/admin/product-create";
+        }
         String randomString = UUID.randomUUID().toString();
 
         session.setAttribute("randomCreateKey", randomString);

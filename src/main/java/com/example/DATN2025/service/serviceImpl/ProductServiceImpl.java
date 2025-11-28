@@ -317,8 +317,11 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDetailDto> productDetailDtoList = new ArrayList<>();
         Double priceMin = Double.valueOf(100000000);
+
+
         for (ProductDetail productDetail:
              product.getProductDetails()) {
+            if (productDetail.getDeleteFlag()) continue;
             if(productDetail.getPrice() < priceMin) {
                 priceMin = productDetail.getPrice();
             }

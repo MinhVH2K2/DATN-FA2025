@@ -18,7 +18,10 @@ public class ProductSpecification implements Specification<Product> {
 
     @Override
     public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        query.distinct(true);
         List<Predicate> predicates = new ArrayList<>();
+        Join<Object, Object> detailJoin = root.join("productDetails", JoinType.INNER);
+        predicates.add(criteriaBuilder.equal(detailJoin.get("deleteFlag"), false));
         if (searchProductDto.getMinPrice() != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), searchProductDto.getMinPrice()));
         }
@@ -44,11 +47,12 @@ public class ProductSpecification implements Specification<Product> {
             Predicate combinedPredicate = criteriaBuilder.or(productNamePredicate, productCodePredicate);
 
             predicates.add(combinedPredicate);
-        }
-        Join<Object, Object> detailJoin = root.join("productDetails", JoinType.INNER);
-        predicates.add(criteriaBuilder.equal(detailJoin.get("deleteFlag"), false));
 
-        predicates.add(criteriaBuilder.equal(root.get("status"), 1));
+        }
+
+//
+
+       // predicates.add(criteriaBuilder.equal(root.get("status"), 1));
       //  predicates.add(criteriaBuilder.equal(root.get("deleteFlag"), false));
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }

@@ -78,17 +78,33 @@ public interface BillRepository extends JpaRepository<Bill, Long>, JpaSpecificat
             " full join bill_detail bd on b.id=bd.bill_id join payment pmt on b.id = pmt.bill_id left join payment_method pm on b.payment_method_id=pm.id where b.id=:maHoaDon",nativeQuery = true)
     BillDetailDtoInterface getBillDetail(@Param("maHoaDon") Long maHoaDon);
 
-    @Query(value = "select pd.id, bd.id as billDetailId, p.id as productId, p.name as tenSanPham,c.name as tenMau, s.name as kichCo, bd.moment_price as giaTien,bd.quantity as soLuong, bd.moment_price*bd.quantity as tongTien,  (\n" +
-            "           SELECT top(1) link\n" +
-            "           FROM image\n" +
-            "           WHERE p.id = image.product_id\n" +
-
-            "       ) AS imageUrl " +
-            "from bill b join bill_detail bd on b.id=bd.bill_id join" +
-            " product_detail pd on bd.product_detail_id =pd.id join" +
-            " product p on pd.product_id=p.id join color c on pd.color_id=c.id join size s on pd.size_id = s.id " +
-            "where b.id=:maHoaDon",nativeQuery = true)
+    @Query(value = """
+    SELECT 
+        pd.id AS id,
+        bd.id AS billDetailId,
+        p.id AS productId,
+        p.code AS productCode,          
+        p.name AS tenSanPham,
+        c.name AS tenMau,
+        s.name AS kichCo,
+        bd.moment_price AS giaTien,
+        bd.quantity AS soLuong,
+        bd.moment_price * bd.quantity AS tongTien,
+        (
+            SELECT TOP(1) link
+            FROM image
+            WHERE p.id = image.product_id
+        ) AS imageUrl
+    FROM bill b
+    JOIN bill_detail bd ON b.id = bd.bill_id
+    JOIN product_detail pd ON bd.product_detail_id = pd.id
+    JOIN product p ON pd.product_id = p.id
+    JOIN color c ON pd.color_id = c.id
+    JOIN size s ON pd.size_id = s.id
+    WHERE b.id = :maHoaDon
+""", nativeQuery = true)
     List<BillDetailProduct> getBillDetailProduct(@Param("maHoaDon") Long maHoaDon);
+
 
     Bill findTopByOrderByIdDesc();
 

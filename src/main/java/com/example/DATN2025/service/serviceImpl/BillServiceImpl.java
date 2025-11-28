@@ -327,6 +327,7 @@ public class BillServiceImpl implements BillService {
                 "<h3>Danh sách sản phẩm:</h3>\n" +
                 "<table border=\"1\" style=\"border-collapse: collapse;\">\n" +
                 "<tr>\n" +
+                "<th>Mã sản phẩm</th>\n" +
                 "<th>Tên sản phẩm</th>\n" +
                 "<th>Màu sắc</th>\n" +
                 "<th>Kích cỡ</th>\n" +
@@ -342,6 +343,7 @@ public class BillServiceImpl implements BillService {
         Locale locale = new Locale("vi", "VN");
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
         for (int i = 0; i < billDetailProduct.size(); i++) {
+            String productCode  = billDetailProduct.get(i).getProductCode();
             String productName = billDetailProduct.get(i).getTenSanPham();
             String color = billDetailProduct.get(i).getTenMau();
             String size = billDetailProduct.get(i).getKichCo();
@@ -350,6 +352,7 @@ public class BillServiceImpl implements BillService {
             String total = currencyFormatter.format(billDetailProduct.get(i).getTongTien());
 
             htmlContent += "<tr>\n" +
+                    "<td>" + productCode + "</td>\n" +
                     "<td>" + productName + "</td>\n" +
                     "<td>" + color + "</td>\n" +
                     "<td>" + size + "</td>\n" +
