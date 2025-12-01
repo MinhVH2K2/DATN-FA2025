@@ -53,9 +53,12 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 }
 
 @font-face {
-  font-family: 'Poppins', sans-serif;
-  src: url('../fonts/Poppins/'Poppins', sans-serif.ttf'); 
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
+
 
 @font-face {
   font-family: Poppins-SemiBold;
@@ -211,37 +214,68 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 
 /*==================================================================
 [ Top bar ]*/
+/*
+ * CSS Đã Tối Ưu Hóa cho Thanh Top Bar (.top-bar)
+ * Áp dụng Flexbox, cải thiện khoảng cách và thẩm mỹ.
+ */
+
+/* 1. Container chính (.top-bar) */
 .top-bar {
   height: 40px;
   background-color: #222;
+  color: #fff;
+
+  /* BẬT FLEXBOX: Căn chỉnh nội dung và phân bố không gian */
+  display: flex;
+  justify-content: space-between; /* Đẩy `.left-top-bar` và `.right-top-bar` ra hai đầu */
+  align-items: center; /* Căn nội dung theo chiều dọc vào giữa */
+
+  padding: 0 20px; /* Khoảng đệm ngang để nội dung không dính mép */
+  box-sizing: border-box;
 }
 
-/*---------------------------------------------*/
+/* 2. Nội dung bên trái (.left-top-bar) */
 .left-top-bar {
   font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  line-height: 1.8;
+  font-size: 13px; /* Tăng nhẹ font size so với 12px để dễ đọc hơn */
   color: #b2b2b2;
+  /* Bỏ line-height vì đã dùng align-items: center ở .top-bar */
 }
 
 
-/*---------------------------------------------*/
+/* 3. Liên kết bên phải (.right-top-bar a) */
 .right-top-bar a {
   font-family: 'Poppins', sans-serif;
   font-size: 12px;
-  line-height: 1.8;
 
-  height: 100%;
+  display: inline-block; /* Đặt link là khối nội tuyến để áp dụng padding/border/height */
+
+  /* Đảm bảo link có chiều cao bằng top-bar và căn chỉnh nội dung */
+  height: 40px;
+  line-height: 40px;
+
   color: #b2b2b2;
-  border-right: 1px solid rgba(255,255,255,0.3);
+  text-decoration: none;
+
+  /* Thêm khoảng đệm ngang để chữ không bị dính vào viền */
+  padding: 0 12px;
+
+  /* Đường viền phân chia thanh thoát (giảm opacity xuống 0.15) */
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* Hiệu ứng chuyển tiếp cho màu khi hover */
+  transition: color 0.3s ease;
 }
 
+/* 4. Viền trái cho liên kết đầu tiên */
 .right-top-bar a:first-child {
-  border-left: 1px solid rgba(255,255,255,0.3);
+  /* Đồng bộ border-left với border-right */
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+/* 5. Hiệu ứng khi di chuột (Hover) */
 .right-top-bar a:hover {
-  color: #6c7ae0;
+  color: #6c7ae0; /* Màu tím/xanh nổi bật */
 }
 
 

@@ -81,53 +81,89 @@
                             <a th:href="@{/getproduct}" class="btn btn-primary cart-btn-transform m-3" data-abc="true">Tiếp tục mua sắm</a>
                         </div>
                         <div class="wrap-table-shopping-cart">
-
                             <table class="table-shopping-cart" th:if="${carts.size() > 0}">
 
+                                <thead>
                                 <tr class="table_head">
-                                    <th class="column-3 ml-2">Ảnh</th>
-                                    <th class="column-2">Tên</th>
+                                    <th class="column-1">Ảnh</th>
+                                    <th class="column-2">Tên sản phẩm</th>
                                     <th class="column-3">Đơn giá</th>
                                     <th class="column-1">Cỡ</th>
                                     <th class="column-1">Màu</th>
-                                    <th class="column-4">Số lượng</th>
-                                    <th class="column-5">Tổng</th>
+                                    <th class="column-4 text-center">Số lượng</th>
+                                    <th class="column-3">Tổng</th>
                                 </tr>
+                                </thead>
+
+                                <tbody>
                                 <tr class="table-row product-item" th:each="cart : *{carts}">
                                     <input type="hidden" th:value="${cart.id}" class="cartId">
                                     <input type="hidden" th:value="${cart.detail.id}" class="detailId">
+
+                                    <!-- Ảnh -->
+                                    <td class="column-1">
+                                        <div class="how-itemcart1 m-l-10" style="width: 70px; height: 70px; overflow:hidden; border-radius: 8px;">
+                                            <img th:src="@{'/' + ${cart.product.imageUrl}}" alt="IMG" style="width:100%; height:100%; object-fit: cover;">
+                                        </div>
+                                    </td>
+
+                                    <!-- Tên sản phẩm -->
+                                    <td class="column-2" th:text="${cart.product.name}"></td>
+
+                                    <!-- Giá -->
                                     <td class="column-3">
-                                        <div class="how-itemcart1 ml-2">
-                                            <img th:src="@{'/' + ${cart.product.imageUrl}}" alt="IMG">
-                                        </div>
+                <span class="product-old-price text-muted"
+                      th:if="${cart.detail.discountedPrice != null}"
+                      th:text="${#numbers.formatDecimal(cart.detail.price, 0, 'POINT', 0, 'COMMA')}"
+                      style="text-decoration: line-through; font-size: 12px"></span>
+                                        <br>
+
+                                        <span class="product-price text-danger font-weight-bold"
+                                              th:if="${cart.detail.discountedPrice != null}"
+                                              th:text="${#numbers.formatDecimal(cart.detail.discountedPrice, 0, 'POINT', 0, 'COMMA')}"></span>
+
+                                        <span class="product-price font-weight-bold"
+                                              th:if="${cart.detail.discountedPrice == null}"
+                                              th:text="${#numbers.formatDecimal(cart.detail.price, 0, 'POINT', 0, 'COMMA')}"></span>
                                     </td>
-                                    <td class="column-3" th:text="${cart.product.name}"></td>
-                                    <td class="column-3" >
-                                        <span class="product-old-price" th:if="${cart.detail.discountedPrice != null}" th:text="${#numbers.formatDecimal(cart.detail.price, 0, 'POINT', 0, 'COMMA')}" style="text-decoration: line-through; font-size: 12px"></span>
-                                        <span class="product-price" th:if="${cart.detail.discountedPrice != null}" th:text="${#numbers.formatDecimal(cart.detail.discountedPrice, 0, 'POINT', 0, 'COMMA')}"></span>
-                                        <span class="product-price" th:if="${cart.detail.discountedPrice == null}" th:text="${#numbers.formatDecimal(cart.detail.price, 0, 'POINT', 0, 'COMMA')}"></span>
-                                    </td>
+
+                                    <!-- Size -->
                                     <td class="column-1" th:text="${cart.detail.size.name}"></td>
+
+                                    <!-- Color -->
                                     <td class="column-1" th:text="${cart.detail.color.name}"></td>
-                                    <td class="column-4">
-                                        <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                            <div class="btn-num-product-down js-update-cart-down cl8 hov-btn3 trans-04 flex-c-m">
+
+                                    <!-- Quantity -->
+                                    <td class="column-4 text-center">
+                                        <div class="wrap-num-product flex-w justify-content-center">
+
+                                            <button class="btn-num-product-down js-update-cart-down cl8 hov-btn3 trans-04 flex-c-m">
                                                 <i class="fs-16 zmdi zmdi-minus"></i>
-                                            </div>
+                                            </button>
 
-                                            <input class="mtext-104 cl3 txt-center num-product" type="number"
-                                                   th:name="'num-product'+${cart.id}" th:value="${cart.quantity}">
+                                            <input class="mtext-104 cl3 txt-center num-product"
+                                                   type="number"
+                                                   th:name="'num-product'+${cart.id}"
+                                                   th:value="${cart.quantity}"
+                                                   style="max-width: 60px">
 
-                                            <div class="btn-num-product-up js-update-cart-up cl8 hov-btn3 trans-04 flex-c-m">
+                                            <button class="btn-num-product-up js-update-cart-up cl8 hov-btn3 trans-04 flex-c-m">
                                                 <i class="fs-16 zmdi zmdi-plus"></i>
-                                            </div>
+                                            </button>
                                         </div>
                                     </td>
-                                    <td class="column-5 total-money"></td>
-                                </tr>
 
+                                    <!-- Tổng -->
+                                    <td class="column-3 total-money font-weight-bold text-success"></td>
+
+
+
+
+                                </tr>
+                                </tbody>
                             </table>
                         </div>
+
 
                         <span class="d-inline-block p-t-18 p-b-15 p-l-2 btn-choose-voucher" data-toggle="modal" data-target="#exampleModalCenter">
 
@@ -201,9 +237,9 @@
 <!--                                        </select>-->
 <!--                                        <div class="dropDownSelect2"></div>-->
 <!--                                    </div>-->
-                                   
 
-                                  
+
+
 
                                     <div class="bor8 bg0 m-b-12">
                                         <input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="street" id="street"
@@ -278,7 +314,7 @@
                         </div>
                     </div>
                     <div class="mb-5">
-                        <span class="text-danger font-weight-bold" style="font-size: 20px">Lưu ý: Chỉ ship trong khu vực Hà Nội, phí ship khách tự trả</span>
+                        <span class="text-danger font-weight-bold" style="font-size: 20px">Lưu ý: Phí ship khách tự trả</span>
                     </div>
                     <label class="checkbox d-flex">
                         <input type="checkbox" class="mr-2" id="term">
@@ -303,7 +339,7 @@
                 <div class="modal-body">
                     <p>1.	Người mua đã thanh toán bằng cách phương thức thanh toán hợp lệ nhưng không nhận được sản phẩm, sản phẩm bị lỗi hoặc bị hư hại, sai sản phẩm, không ưng ý.</p>
                     <p>2.	Có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 7 ngày kể từ lúc đơn hàng được cập nhật giao hàng thành công.</p>
-                    <p>3.	Tất cả các yêu cầu trả hànghoàn tiền phải được thực hiện trên web hoặc liên hệ trực tiếp tới cửa hàng</p>
+                    <p>3.	Tất cả các yêu cầu trả hàng hoàn tiền phải được thực hiện trên web hoặc liên hệ trực tiếp tới cửa hàng</p>
                     <p>4.	Phí gửi hàng lại do người mua trả</p>
                     <p>5.	Mỗi hóa đơn chỉ được đổi trả 1 lần</p>
                     <p>6.	Chỉ hỗ trợ đổi size, đổi màu, đổi sản phẩm bằng hoặc hơn giá</p>
