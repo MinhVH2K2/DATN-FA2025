@@ -1,6 +1,7 @@
 package com.example.DATN2025.controller.user;
 
 
+
 import com.example.DATN2025.dto.Cart.CartDto;
 import com.example.DATN2025.entity.Bill;
 import com.example.DATN2025.service.BillService;
@@ -29,12 +30,22 @@ public class OrderStatusController {
     public String viewCartStatus(Model model,
                                  @RequestParam(required = false) String status,
                                  @PageableDefault(size = 5, sort = "createDate", direction = Sort.Direction.DESC)  Pageable pageable) {
-        Page<Bill> billPage = null;
+
+        Page<Bill> billPage; // Khởi tạo billPage không cần gán null
+
         if(status == null || status.trim().isEmpty()) {
             billPage = billService.getBillByAccount(pageable);
-        }else {
+        } else {
             billPage = billService.getBillByStatus(status, pageable);
             model.addAttribute("status", status);
+        }
+
+        // ⚠️ BƯỚC KHẮC PHỤC QUAN TRỌNG: Kiểm tra và xử lý null
+        if (billPage == null) {
+            // Gán nó bằng một Page rỗng để tránh lỗi NullPointerException trong Thymeleaf
+            // Page.empty(pageable) được khuyến nghị nếu dùng Spring Data
+            // Nếu không, bạn có thể dùng new PageImpl<>(Collections.emptyList(), pageable, 0)
+            billPage = Page.empty(pageable);
         }
 
         model.addAttribute("bills", billPage);
