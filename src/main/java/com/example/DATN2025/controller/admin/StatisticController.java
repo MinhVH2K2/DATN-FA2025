@@ -27,7 +27,7 @@ public class StatisticController {
         this.billRepository = billRepository;
         this.statisticService = statisticService;
     }
-
+//Thống kê theo doanh thu
     @GetMapping("/admin/thong-ke-doanh-thu")
     public String viewStatisticRevenuePage(Model model) {
         LocalDateTime currentDateTime = LocalDateTime.now();
